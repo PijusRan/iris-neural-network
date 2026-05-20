@@ -7,7 +7,8 @@ import java.util.ArrayList;
 public class dataHandler {
     public static void readData(String filePath, ArrayList<IrisSpecies> irisData) {
         try {
-            BufferedReader br = new BufferedReader(new FileReader("Iris.csv"));
+            BufferedReader br = new BufferedReader(new FileReader(filePath));
+            br.readLine();
             String line;
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(",");

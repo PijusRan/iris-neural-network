@@ -5,6 +5,7 @@ public class Layer {
     public Neuron[] neuronsIn;
     public Neuron[] neuronsOut;
     public double[][] weights;
+    public double[] biases;
 
     public Layer(int in, int out) {
         this.in = in;
@@ -19,10 +20,11 @@ public class Layer {
             this.neuronsOut[i] = new Neuron();
         }
         this.weights = new double[out][in];
+        this.biases = new double[out];
 
         initializeWeights();
+        initializeBiases();
     }
-
     public void initializeWeights() {
         for (int i = 0; i < out; i++) {
             for (int j = 0; j < in; j++) {
@@ -30,18 +32,24 @@ public class Layer {
             }
         }
     }
-
-    public void calculateNeuronValue(int index) {
-        double sum = 0;
-        for (int j = 0; j < in; j++) {
-            sum += neuronsIn[j].value * weights[index][j];
+    public void initializeBiases() {
+        for (int i = 0; i < out; i++) {
+            biases[i] = Math.random() * 2 - 1; // Random biases between -1 and 1
         }
-        neuronsOut[index].value = Functions.sigmoidFunc(sum);
     }
 
-    public void forwardPass() {
+    // --- GET / SET ---
+
+    public void setWeights(double[][] newWeights) {
         for (int i = 0; i < out; i++) {
-            calculateNeuronValue(i);
+            for (int j = 0; j < in; j++) {
+                weights[i][j] = newWeights[i][j];
+            }
+        }
+    }
+    public void setBiases(double[] newBiases) {
+        for (int i = 0; i < out; i++) {
+            biases[i] = newBiases[i];
         }
     }
 
@@ -50,7 +58,23 @@ public class Layer {
             neuronsIn[i].value = inputValues[i];
         }
     }
+
     public Neuron[] getOutputNodes() {
         return neuronsOut.clone();
+    }
+
+    // --- METHODS ---
+    public void calculateNeuronValue(int index) {
+        double sum = 0;
+        for (int j = 0; j < in; j++) {
+            sum += neuronsIn[j].value * weights[index][j];
+        }
+        neuronsOut[index].value = Functions.sigmoidFunc(sum + biases[index]);
+    }
+
+    public void forwardPass() {
+        for (int i = 0; i < out; i++) {
+            calculateNeuronValue(i);
+        }
     }
 }
