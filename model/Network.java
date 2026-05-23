@@ -3,7 +3,6 @@ package model;
 public class Network {
     public Layer inputLayer;
     public Layer hiddenLayer;
-    public double fitness;
 
     // --- CONSTRUCTORS ---
     public Network() {
@@ -25,9 +24,9 @@ public class Network {
             throw new IllegalStateException("Input values must be set before running the network.");
         }
 
-        inputLayer.forwardPass();
+        inputLayer.forwardSigmoidPass();
         hiddenLayer.neuronsIn = inputLayer.getOutputNodes();
-        hiddenLayer.forwardPass();
+        hiddenLayer.forwardLinearPass();
     }
 
     public double[] getResult() {
@@ -40,14 +39,8 @@ public class Network {
 
     public Network clone() {
         Network clonedNetwork = new Network();
-
-        for (int i = 0; i < inputLayer.in; i++) {
-            clonedNetwork.inputLayer.neuronsIn[i].value = this.inputLayer.neuronsIn[i].value;
-        }
-        for (int i = 0; i < inputLayer.out; i++) {
-            clonedNetwork.inputLayer.neuronsOut[i].value = this.inputLayer.neuronsOut[i].value;
-        }
-
+        clonedNetwork.inputLayer = this.inputLayer.clone();
+        clonedNetwork.hiddenLayer = this.hiddenLayer.clone();
         return clonedNetwork;
     }
 }

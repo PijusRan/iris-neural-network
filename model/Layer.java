@@ -64,7 +64,7 @@ public class Layer {
     }
 
     // --- METHODS ---
-    public void calculateNeuronValue(int index) {
+    public void calculateSigmoidNeuronValue(int index) {
         double sum = 0;
         for (int j = 0; j < in; j++) {
             sum += neuronsIn[j].value * weights[index][j];
@@ -72,9 +72,34 @@ public class Layer {
         neuronsOut[index].value = Functions.sigmoidFunc(sum + biases[index]);
     }
 
-    public void forwardPass() {
+    public void forwardSigmoidPass() {
         for (int i = 0; i < out; i++) {
-            calculateNeuronValue(i);
+            calculateSigmoidNeuronValue(i);
         }
+    }
+
+    public void calculateLinearNeuronValue(int index) {
+        double sum = 0;
+        for (int j = 0; j < in; j++) {
+            sum += neuronsIn[j].value * weights[index][j];
+        }
+        neuronsOut[index].value = Functions.linearFunc(sum + biases[index]);
+    }
+
+    public void forwardLinearPass() {
+        for (int i = 0; i < out; i++) {
+            calculateLinearNeuronValue(i);
+        }
+    }
+
+    public Layer clone() {
+        Layer cloned = new Layer(this.in, this.out);
+        for (int i = 0; i < out; i++) {
+            for (int j = 0; j < in; j++) {
+                cloned.weights[i][j] = this.weights[i][j];
+            }
+            cloned.biases[i] = this.biases[i];
+        }
+        return cloned;
     }
 }

@@ -4,7 +4,7 @@ import data.dataHandler;
 import java.util.ArrayList;
 import model.Network;
 import training.evolutionCycle;
-import training.fitnessCalc;
+import training.fitnessTest;
 
 public class Main {
     public static void main(String[] args) {
@@ -16,18 +16,20 @@ public class Main {
         Network network = new Network();
         network.inputLayer.setInputValues(sampleData.get(0).measurements);
         network.run();
-        double[] output = network.getResult();
-        network.fitness = fitnessCalc.calculateFitness(output, sampleData.get(0).speciesValue);
+        double oldFitness = fitnessTest.testFitness(network, sampleData);
+
+        System.out.println("Before training:");
+        System.out.println("Fitness: " + oldFitness);
 
         // Run evolution cycle
-        evolutionCycle.Run(sampleData, 10000, network);
+        network = evolutionCycle.Run(sampleData, 10000, network);
 
         // Rerun test with best network
         network.inputLayer.setInputValues(sampleData.get(0).measurements);
         network.run();
-        output = network.getResult();
-        System.out.println("Fitness: " + network.fitness);
-        System.out.println("Output: " + output[0]);
-        System.out.println("Expected: " + sampleData.get(0).speciesValue[0]);
+        double newFitness = fitnessTest.testFitness(network, sampleData);
+
+        System.out.println("After training:");
+        System.out.println("Fitness: " + newFitness);
     }
 }
