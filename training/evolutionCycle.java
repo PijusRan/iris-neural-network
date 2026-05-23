@@ -4,40 +4,39 @@ import data.IrisSpecies;
 import java.util.ArrayList;
 import model.Network;
 
+/*
+    1. Get sample input and expected output
+    2. Find the fitness of the current network
+    3. Generate random weights and biases for a new network
+    4. Run the new network and find its fitness
+    5. If the new network has better fitness, replace the current network with the new
+*/
+
 public class evolutionCycle {
     public static Network Run(ArrayList<IrisSpecies> sampleData, int loops, Network network){
         Network bestNetwork = network.clone();
-
+        
         for (int i = 0; i < loops; i++) {
-            for (int j = 0; j < sampleData.size(); j++) {
-                double[] sampleInput = sampleData.get(j).measurements;
-                double[] sampleOutput = sampleData.get(j).speciesValue;
+            // Generate random weights and biases
+            double[][] newInputWeights = valueGen.generateRandomValues(network.inputLayer.in, network.inputLayer.out, -0.25, 0.25);
+            double[] newInputBiases = valueGen.generateRandomValues(network.inputLayer.out, 1, -0.25, 0.25)[0];
+            double[][] newHiddenWeights = valueGen.generateRandomValues(network.hiddenLayer.in, network.hiddenLayer.out, -0.25, 0.25);
+            double[] newHiddenBiases = valueGen.generateRandomValues(network.hiddenLayer.out, 1, -0.25, 0.25)[0];
 
-                // Generate random weights and biases
-                double[][] newInputWeights = valueGen.generateRandomValues(network.inputLayer.in, network.inputLayer.out, -0.25, 0.25);
-                double[] newInputBiases = valueGen.generateRandomValues(network.inputLayer.out, 1, -0.25, 0.25)[0];
-                double[][] newHiddenWeights = valueGen.generateRandomValues(network.hiddenLayer.in, network.hiddenLayer.out, -0.25, 0.25);
-                double[] newHiddenBiases = valueGen.generateRandomValues(network.hiddenLayer.out, 1, -0.25, 0.25)[0];
+            // Create new network with values
+            Network newNetwork = bestNetwork.clone();
+            newNetwork.inputLayer.alterWeights(newInputWeights);
+            newNetwork.inputLayer.alterBiases(newInputBiases);
+            newNetwork.hiddenLayer.alterWeights(newHiddenWeights);
+            newNetwork.hiddenLayer.alterBiases(newHiddenBiases);
 
-                // Create new network with values
-                Network newNetwork = bestNetwork.clone();
-                newNetwork.inputLayer.setWeights(newInputWeights);
-                newNetwork.inputLayer.setBiases(newInputBiases);
-                newNetwork.hiddenLayer.setWeights(newHiddenWeights);
-                newNetwork.hiddenLayer.setBiases(newHiddenBiases);
+            // Calculate fitness
+            double oldMSE = fitnessTest.getMSE(network, sampleData);
+            double newMSE = fitnessTest.getMSE(newNetwork, sampleData);
 
-                // Run the new network
-                newNetwork.inputLayer.setInputValues(sampleInput);
-                newNetwork.run();
-
-                // Calculate fitness
-                double oldFitness = fitnessTest.testSingleFitness(bestNetwork.getResult(), sampleInput, sampleOutput);
-                double newFitness = fitnessTest.testSingleFitness(newNetwork.getResult(), sampleInput, sampleOutput);
-
-                // Compare fitness and keep the best network
-                if (newFitness > oldFitness) {
-                    bestNetwork = newNetwork;
-                }
+            // Compare fitness and keep the best network
+            if (newMSE < oldMSE) {
+                bestNetwork = newNetwork;
             }
         }
         return bestNetwork;

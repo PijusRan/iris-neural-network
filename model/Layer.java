@@ -53,6 +53,19 @@ public class Layer {
         }
     }
 
+    public void alterWeights(double[][] delta) {
+        for (int i = 0; i < out; i++) {
+            for (int j = 0; j < in; j++) {
+                weights[i][j] = weights[i][j] + delta[i][j];
+            }
+        }
+    }
+    public void alterBiases(double[] delta) {
+        for (int i = 0; i < out; i++) {
+            biases[i] = biases[i] + delta[i];
+        }
+    }
+
     public void setInputValues(double[] inputValues) {
         for (int i = 0; i < in; i++) {
             neuronsIn[i].value = inputValues[i];
@@ -60,7 +73,12 @@ public class Layer {
     }
 
     public Neuron[] getOutputNodes() {
-        return neuronsOut.clone();
+        Neuron[] copy = new Neuron[out];
+        for (int i = 0; i < out; i++) {
+            copy[i] = new Neuron();
+            copy[i].value = neuronsOut[i].value;
+        }
+        return copy;
     }
 
     // --- METHODS ---
@@ -101,5 +119,23 @@ public class Layer {
             cloned.biases[i] = this.biases[i];
         }
         return cloned;
+    }
+
+    // --- TOSTRING ---
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Layer (in: ").append(in).append(", out: ").append(out).append(")\n");
+        sb.append("Weights:\n");
+        for (int i = 0; i < out; i++) {
+            for (int j = 0; j < in; j++) {
+                sb.append(String.format("%.4f ", weights[i][j]));
+            }
+            sb.append("\n");
+        }
+        sb.append("Biases:\n");
+        for (int i = 0; i < out; i++) {
+            sb.append(String.format("%.4f ", biases[i]));
+        }
+        return sb.toString();
     }
 }

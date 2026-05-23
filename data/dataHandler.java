@@ -24,8 +24,29 @@ public class dataHandler {
 
                 irisData.add(iris);
             }
+
+            br.close();
+
+            normalizeData(irisData);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public static void normalizeData(ArrayList<IrisSpecies> data) {
+        double[] min = {Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE};
+        double[] max = {Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE};
+
+        for (IrisSpecies s : data) {
+            for (int i = 0; i < 4; i++) {
+                if (s.measurements[i] < min[i]) min[i] = s.measurements[i];
+                if (s.measurements[i] > max[i]) max[i] = s.measurements[i];
+            }
+        }
+        for (IrisSpecies s : data) {
+            for (int i = 0; i < 4; i++) {
+                s.measurements[i] = (s.measurements[i] - min[i]) / (max[i] - min[i]);
+            }
         }
     }
 }
