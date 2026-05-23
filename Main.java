@@ -6,7 +6,7 @@ import training.evolutionCycle;
 
 public class Main {
     static int SAMPLE_ID = 100;
-    static int TRAINING_LOOPS = 1000;
+    static int TRAINING_LOOPS = 100000;
 
     public static void main(String[] args) {
         // Create sample data
