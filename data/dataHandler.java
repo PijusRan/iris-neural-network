@@ -47,4 +47,18 @@ public class dataHandler {
             for (int i = 0; i < 4; i++)
                 s.measurements[i] = (s.measurements[i] - min[i]) / (max[i] - min[i]);
     }
+
+    public static void normalizeData(double[] measurements, ArrayList<IrisSpecies> data) {
+        double[] min = {Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE};
+        double[] max = {-Double.MAX_VALUE, -Double.MAX_VALUE, -Double.MAX_VALUE, -Double.MAX_VALUE};
+ 
+        for (IrisSpecies s : data)
+            for (int i = 0; i < 4; i++) {
+                if (s.measurements[i] < min[i]) min[i] = s.measurements[i];
+                if (s.measurements[i] > max[i]) max[i] = s.measurements[i];
+            }
+ 
+        for (int i = 0; i < 4; i++)
+            measurements[i] = (measurements[i] - min[i]) / (max[i] - min[i]);
+    }
 }

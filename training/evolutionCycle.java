@@ -4,14 +4,6 @@ import data.IrisSpecies;
 import java.util.ArrayList;
 import model.Network;
 
-/*
-    1. Get sample input and expected output
-    2. Find the fitness of the current network
-    3. Generate random weights and biases for a new network
-    4. Run the new network and find its fitness
-    5. If the new network has better fitness, replace the current network with the new
-*/
-
 public class evolutionCycle {
     public static Network Run(ArrayList<IrisSpecies> sampleData, int loops, Network network){
         Network bestNetwork = network.clone();
