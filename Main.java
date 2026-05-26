@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import model.Network;
 import training.evolutionCycle;
-import training.fitnessTest;
+import training.fitnessCalculator;
 
 public class Main {
     static int SAMPLE_ID = 0;
@@ -29,7 +29,7 @@ public class Main {
         System.out.println(network.hiddenLayer.toString()+"\n");
         System.out.println("Initial output: " + network.getResult()[0]);
 
-        double initialFitness = fitnessTest.getMSE(network, sampleData);
+        double initialFitness = fitnessCalculator.getMSE(network, sampleData);
         
         // Run evolution cycle
         network = evolutionCycle.Run(sampleData, TRAINING_LOOPS, network);
@@ -43,12 +43,16 @@ public class Main {
         System.out.println(network.hiddenLayer.toString()+"\n");
         System.out.println("Final output: " + network.getResult()[0]);
 
-        double finalFitness = fitnessTest.getMSE(network, sampleData);
+        double finalFitness = fitnessCalculator.getMSE(network, sampleData);
         
         // Fitness comparison
         System.out.println("\n === FITNESS COMPARISON === \n");
         System.out.println("Initial MSE: " + initialFitness);
         System.out.println("Final MSE: " + finalFitness + "\n");
+
+        System.out.println("\n === FINAL ACCURACY === \n");
+        double finalAccuracy = fitnessCalculator.getAccuracy(network, sampleData);
+        System.out.println("Final Accuracy: " + (finalAccuracy * 100) + "%\n");
 
         // Test
         System.out.println(" === TEST === \n");

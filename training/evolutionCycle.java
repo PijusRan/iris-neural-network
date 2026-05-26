@@ -25,8 +25,8 @@ public class evolutionCycle {
             newNetwork.hiddenLayer.alterBiases(newHiddenBiases);
 
             // Calculate fitness
-            double oldMSE = fitnessTest.getMSE(bestNetwork, sampleData);
-            double newMSE = fitnessTest.getMSE(newNetwork, sampleData);
+            double oldMSE = fitnessCalculator.getMSE(bestNetwork, sampleData);
+            double newMSE = fitnessCalculator.getMSE(newNetwork, sampleData);
 
             // Compare fitness and keep the best network
             if (newMSE < oldMSE) {
