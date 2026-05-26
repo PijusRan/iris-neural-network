@@ -12,11 +12,13 @@ public class Main {
 
     public static void main(String[] args) {
         // Create sample data
-        ArrayList<IrisSpecies> sampleData = new ArrayList<>();
-        dataHandler.readData("data/Iris.csv", sampleData);
+        ArrayList<IrisSpecies> sampleData = dataHandler.readData("data/Iris.csv");
+
         System.out.println("Sample input: " + sampleData.get(SAMPLE_ID).measurements[0] + ", " + sampleData.get(SAMPLE_ID).measurements[1] + ", " + sampleData.get(SAMPLE_ID).measurements[2] + ", " + sampleData.get(SAMPLE_ID).measurements[3]);
         System.out.println("Expected output: " + sampleData.get(SAMPLE_ID).speciesValue[0]);
         
+        dataHandler.normalizeData(sampleData);
+
         // Create first network
         Network network = new Network();
         network.inputLayer.setInputValues(sampleData.get(SAMPLE_ID).measurements);
@@ -60,6 +62,8 @@ public class Main {
         double petalLength = scanner.nextDouble();
         System.out.print("Enter petal width: ");
         double petalWidth = scanner.nextDouble();
+
+        scanner.close();
 
         double[] userInput = {sepalLength, sepalWidth, petalLength, petalWidth};
         dataHandler.normalizeData(userInput, sampleData);

@@ -5,7 +5,12 @@ import java.io.FileReader;
 import java.util.ArrayList;
 
 public class dataHandler {
-    public static void readData(String filePath, ArrayList<IrisSpecies> irisData) {
+    public static double[] globalMin = new double[4];
+    public static double[] globalMax = new double[4];
+    
+    public static ArrayList<IrisSpecies> readData(String filePath) {
+        ArrayList<IrisSpecies> irisData = new ArrayList<>();
+        
         try {
             BufferedReader br = new BufferedReader(new FileReader(filePath));
             br.readLine();
@@ -26,39 +31,34 @@ public class dataHandler {
             }
 
             br.close();
-
-            normalizeData(irisData);
-        } catch (Exception e) {
+        } 
+        catch (Exception e) {
             e.printStackTrace();
         }
+
+        return irisData;
     }
 
     public static void normalizeData(ArrayList<IrisSpecies> data) {
-        double[] min = {Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE};
-        double[] max = {-Double.MAX_VALUE, -Double.MAX_VALUE, -Double.MAX_VALUE, -Double.MAX_VALUE};
- 
+        double[] min = {100.0, 100.0, 100.0, 100.0};
+        double[] max = {-100.0, -100.0, -100.0, -100.0};
+
         for (IrisSpecies s : data)
             for (int i = 0; i < 4; i++) {
                 if (s.measurements[i] < min[i]) min[i] = s.measurements[i];
                 if (s.measurements[i] > max[i]) max[i] = s.measurements[i];
             }
- 
+
+        globalMin = min;
+        globalMax = max;
+
         for (IrisSpecies s : data)
             for (int i = 0; i < 4; i++)
                 s.measurements[i] = (s.measurements[i] - min[i]) / (max[i] - min[i]);
     }
 
     public static void normalizeData(double[] measurements, ArrayList<IrisSpecies> data) {
-        double[] min = {Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE};
-        double[] max = {-Double.MAX_VALUE, -Double.MAX_VALUE, -Double.MAX_VALUE, -Double.MAX_VALUE};
- 
-        for (IrisSpecies s : data)
-            for (int i = 0; i < 4; i++) {
-                if (s.measurements[i] < min[i]) min[i] = s.measurements[i];
-                if (s.measurements[i] > max[i]) max[i] = s.measurements[i];
-            }
- 
         for (int i = 0; i < 4; i++)
-            measurements[i] = (measurements[i] - min[i]) / (max[i] - min[i]);
+            measurements[i] = (measurements[i] - globalMin[i]) / (globalMax[i] - globalMin[i]);
     }
 }

@@ -1,0 +1,116 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[lithuanian]{babel}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{parskip}
+\usepackage{geometry}
+\geometry{top=2.5cm,bottom=2.5cm,left=3cm,right=2.5cm}
+
+\begin{document}
+
+% ===== TITULINIS =====
+
+\begin{center}
+    {\large\textbf{Vilniaus Universitetas}}\\[0.2cm]
+    {\large Matematikos ir Informatikos Fakultetas}\\[1.5cm]
+    {\LARGE\bfseries Neuroninis tinklas - Iris gėlės klasifikavimas}\\[0.3cm]
+    {\large Laboratorinio darbo ataskaita}\\[2cm]
+
+    \begin{tabular}{rl}
+        \textbf{Studentas:}          & Pijus Ranonis \\[0.2cm]
+        \textbf{Kursas / grupė:}     & 1 kursas, 5 grupė \\[0.2cm]
+        \textbf{Pratybų dėstytojas:} & Linas Litvinas \\
+        \textbf{Dalyko dėstytojas:}  & Rimantas Vaicekauskas \\
+    \end{tabular}
+
+    \vspace{2cm}
+    {\large Vilnius, \the\year}
+\end{center}
+\newpage
+
+% ===== APRAŠYMAS ======
+
+\section*{Darbo tikslas ir aprašymas}
+
+Šio laboratorinio darbo tikslas - sukurti programą, kuri pasinaudojus dirbtinį neuroninį tinklą identifikuoja Iris gėlės rūšį.
+
+Gėlės rūšys:
+\begin{itemize}
+    \item \textit{Iris setosa} (reikšmė: < 1,5)
+    \item \textit{Iris versicolor} (reikšmė: 1,5 -- 2,5)
+    \item \textit{Iris virginica} (reikšmė: > 2,5)
+\end{itemize}
+
+\section*{Architektūra ir veikimo etapai}
+
+\subsection*{1 etapas: Tinklo sudarymas}
+
+Tinklas sudarytas iš dviejų sluoksnių:
+
+\begin{table}[h]
+\centering
+\caption{Neuroninio tinklo sluoksnių parametrai}
+\begin{tabular}{@{}llll@{}}
+\toprule
+\textbf{Sluoksnis} & \textbf{Įėjimai} & \textbf{Išėjimai} & \textbf{Aktyvacijos funkcija} \\
+\midrule
+Įėjimo sluoksnis    & 4 & 6 & Sigmoid \\
+Paslėptas sluoksnis & 6 & 1 & Tiesinė \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection*{2 etapas: Duomenų normalizavimas}
+
+Prieš mokymą visi matavimų duomenys normalizuojami į intervalą $[0,\;1]$ naudojant formulę:
+\[
+x' = \frac{x - x_{\min}}{x_{\max} - x_{\min}}
+\]
+
+\subsection*{3 etapas: Evoliucinis mokymo algoritmas}
+
+Tinklas treniruojamas evoliucijos algoritmo:
+\begin{enumerate}
+    \item Sukuriamos atsitiktinės svorių reikšmė.
+    \item Kiekvienoje iteracijoje generuojami atsitiktiniai svorių ir poslinkių pokyčiai.
+    \item Apskaičiuojamas naujo tinklo MSE su visais 150 pavyzdžių.
+    \item Jei naujasis MSE mažesnis -- naujas tinklas perrašomas vietoj senojo.
+    \item Pakeitimų dydis $\Delta$ palaipsniui mažinamas su kiekviena iteracija (nuo 0,2 iki 0).
+\end{enumerate}
+
+\subsection*{Klaidos funkcija}
+
+Tinklo kokybei vertinti naudojamas vidutinis kvadratinės paklaidos rodiklis (MSE):
+\[
+\text{MSE} = \frac{1}{n}\sum_{i=1}^{n}\left(\hat{y}_i - y_i\right)^2
+\]
+kur $\hat{y}_i$ -- tinklo prognozuojama reikšmė, $y_i$ -- tikroji reikšmė, $n$ -- pavyzdžių skaičius.
+
+\section*{Gauti rezultatai}
+
+\begin{table}[h]
+\centering
+\caption{MSE reikšmės prieš ir po treniravimo}
+\begin{tabular}{@{}lcc@{}}
+\toprule
+\textbf{Etapas} & \textbf{MSE} & \textbf{Paklaidos sumažėjimas} \\
+\midrule
+Pradinis tinklas (atsitiktiniai svoriai) & $\approx 20{,}90$ & -- \\
+Po treniravimo (100\,000 iteracijų)      & $\approx 0{,}02$  & $\approx 99{,}9\,\%$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Treniravimo metu MSE sumažėjo nuo $\approx 20{,}90$ iki $\approx 0{,}02$ -- beveik 1000 kartų mažiau.
+
+\section*{Išvados}
+
+\begin{enumerate}
+    \item Sėkmingai suprogramuotas dviejų sluoksnių dirbtinis neuroninis tinklas Java kalba.
+    \item Evoliucinio mokymo algoritmas veikia ir gali pasiekti žemą MSE ($\approx 0{,}02$) per pakankamai iteracijų.
+\end{enumerate}
+
+\end{document}
